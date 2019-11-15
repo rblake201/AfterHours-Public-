@@ -2,15 +2,33 @@ package com.example.starterproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.TextView;
 
-import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.Callout;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String sTag = "Gesture";
     private MapView mMapView;
+    private GraphicsOverlay graphicsOverlay;
+    private Callout mCallout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +38,58 @@ public class MainActivity extends AppCompatActivity {
         mMapView = findViewById(R.id.mapView);
         ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 43.8231, -111.7924, 16);
         mMapView.setMap(map);
+
+        //SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.GREEN, 10);
+
+        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView){
+            public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+                createGraphics(motionEvent);
+                return true;
+            }
+            private void createGraphics(MotionEvent motionEvent) {
+                createGraphicsOverlay();
+                createPointGraphics(motionEvent);
+            }
+
+
+            private void createGraphicsOverlay() {
+                graphicsOverlay = new GraphicsOverlay();
+                mMapView.getGraphicsOverlays().add(graphicsOverlay);
+            }
+
+            private void createPointGraphics(MotionEvent motionEvent) {
+
+
+                Point point = new Point(motionEvent.getX(), motionEvent.getY(), SpatialReferences.getWgs84());
+                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
+                pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
+                Graphic pointGraphic = new Graphic(point, pointSymbol);
+                graphicsOverlay.getGraphics().add(pointGraphic);
+            }
+        });
+
+    }
+
+
+    private void createGraphics(MotionEvent motionEvent) {
+        createGraphicsOverlay();
+        createPointGraphics(motionEvent);
+    }
+
+
+    private void createGraphicsOverlay() {
+        graphicsOverlay = new GraphicsOverlay();
+        mMapView.getGraphicsOverlays().add(graphicsOverlay);
+    }
+
+    private void createPointGraphics(MotionEvent motionEvent) {
+
+
+        Point point = new Point(motionEvent.getX(), motionEvent.getY(), SpatialReferences.getWgs84());
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
+        pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
+        Graphic pointGraphic = new Graphic(point, pointSymbol);
+        graphicsOverlay.getGraphics().add(pointGraphic);
     }
 
     @Override
@@ -39,4 +109,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         mMapView.dispose();
     }
+
 }
