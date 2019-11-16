@@ -43,12 +43,19 @@ public class MainActivity extends AppCompatActivity {
 
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView){
             public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-                createGraphics(motionEvent);
+                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
+
+                Point mapPoint = mMapView.screenToLocation((screenPoint));
+
+
+                Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
+
+                createGraphics(motionEvent, wgs84Point);
                 return true;
             }
-            private void createGraphics(MotionEvent motionEvent) {
+            private void createGraphics(MotionEvent motionEvent, Point wgs84Point) {
                 createGraphicsOverlay();
-                createPointGraphics(motionEvent);
+                createPointGraphics(motionEvent, wgs84Point);
             }
 
 
@@ -57,13 +64,11 @@ public class MainActivity extends AppCompatActivity {
                 mMapView.getGraphicsOverlays().add(graphicsOverlay);
             }
 
-            private void createPointGraphics(MotionEvent motionEvent) {
+            private void createPointGraphics(MotionEvent motionEvent, Point wgs84Point) {
 
-
-                Point point = new Point(motionEvent.getX(), motionEvent.getY(), SpatialReferences.getWgs84());
                 SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
                 pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
-                Graphic pointGraphic = new Graphic(point, pointSymbol);
+                Graphic pointGraphic = new Graphic(wgs84Point, pointSymbol);
                 graphicsOverlay.getGraphics().add(pointGraphic);
             }
         });
