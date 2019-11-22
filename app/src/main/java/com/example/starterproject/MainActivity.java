@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mMapView = findViewById(R.id.mapView);
-        ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 43.8231, -111.7924, 16);
+        ArcGISMap map = new ArcGISMap(Basemap.Type.NATIONAL_GEOGRAPHIC, 43.8231, -111.7924, 16);
         mMapView.setMap(map);
 
         //SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.GREEN, 10);
