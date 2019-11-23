@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Point mapPoint = mMapView.screenToLocation((screenPoint));
 
-
                 Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
 
                 createGraphics(motionEvent, wgs84Point);
+
                 return true;
             }
             private void createGraphics(MotionEvent motionEvent, Point wgs84Point) {
@@ -76,26 +76,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void createGraphics(MotionEvent motionEvent) {
-        createGraphicsOverlay();
-        createPointGraphics(motionEvent);
-    }
-
-
-    private void createGraphicsOverlay() {
-        graphicsOverlay = new GraphicsOverlay();
-        mMapView.getGraphicsOverlays().add(graphicsOverlay);
-    }
-
-    private void createPointGraphics(MotionEvent motionEvent) {
-
-
-        Point point = new Point(motionEvent.getX(), motionEvent.getY(), SpatialReferences.getWgs84());
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
-        pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
-        Graphic pointGraphic = new Graphic(point, pointSymbol);
-        graphicsOverlay.getGraphics().add(pointGraphic);
-    }
 
     @Override
     protected void onPause(){
