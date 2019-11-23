@@ -60,8 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
 
             private void createGraphicsOverlay() {
-                graphicsOverlay = new GraphicsOverlay();
-                mMapView.getGraphicsOverlays().add(graphicsOverlay);
+                if(!mMapView.getGraphicsOverlays().isEmpty()) {
+                    mMapView.getGraphicsOverlays().clear();
+                }
+                else if(mMapView.getGraphicsOverlays().isEmpty()) {
+                    graphicsOverlay = new GraphicsOverlay();
+                    mMapView.getGraphicsOverlays().add(graphicsOverlay);
+                }
             }
 
             private void createPointGraphics(MotionEvent motionEvent, Point wgs84Point) {
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
                 pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
                 Graphic pointGraphic = new Graphic(wgs84Point, pointSymbol);
+
                 graphicsOverlay.getGraphics().add(pointGraphic);
             }
         });
