@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.esri.arcgisruntime.geometry.GeometryEngine;
