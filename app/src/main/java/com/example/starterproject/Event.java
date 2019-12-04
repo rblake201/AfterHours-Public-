@@ -9,7 +9,7 @@ public class Event {
     public Event(){
     }
 
-    public Event(String title, String time, String description){
+    public Event(String title, String date, String time, String description){
         this.title = title;
         this.date = date;
         this.time = time;
