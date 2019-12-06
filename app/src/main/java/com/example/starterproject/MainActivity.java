@@ -2,6 +2,7 @@ package com.example.starterproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
 
                 createGraphics(motionEvent, wgs84Point);
+                Intent startIntent = new Intent(getApplicationContext(), EventInfoActivity.class);
+                startActivity(startIntent);
 
                 return true;
             }
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             private void createGraphicsOverlay() {
                 if(!mMapView.getGraphicsOverlays().isEmpty()) {
-                    mMapView.getGraphicsOverlays().clear();
+                    //mMapView.getGraphicsOverlays().clear();
                 }
                 else if(mMapView.getGraphicsOverlays().isEmpty()) {
                     graphicsOverlay = new GraphicsOverlay();
@@ -77,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 Graphic pointGraphic = new Graphic(wgs84Point, pointSymbol);
 
                 graphicsOverlay.getGraphics().add(pointGraphic);
+
             }
+
         });
 
     }

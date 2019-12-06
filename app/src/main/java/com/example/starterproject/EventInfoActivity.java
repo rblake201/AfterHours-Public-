@@ -1,11 +1,14 @@
 package com.example.starterproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.esri.arcgisruntime.geometry.Point;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,6 +39,13 @@ public class EventInfoActivity extends AppCompatActivity {
                 Event event = new Event(myTitle.getText().toString(), myDate.getText().toString(), myTime.getText().toString(), myDesc.getText().toString());
 
                 database.child("Event").push().setValue(event);
+                myTitle.setText("");
+                myDate.setText("");
+                myTime.setText("");
+                myDesc.setText("");
+
+                Intent intent = new Intent(EventInfoActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
