@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.esri.arcgisruntime.geometry.Point;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 public class EventInfoActivity extends AppCompatActivity {
 
@@ -26,6 +27,10 @@ public class EventInfoActivity extends AppCompatActivity {
         firebaseBtn = (Button) findViewById(R.id.button);
         database = FirebaseDatabase.getInstance().getReference();
 
+        Gson gson = new Gson();
+
+        String coordinates = getIntent().getStringExtra("point");
+        Point point = gson.fromJson(coordinates, Point.class);
 
         firebaseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +42,7 @@ public class EventInfoActivity extends AppCompatActivity {
                 myDesc = findViewById(R.id.description);
 
                 Event event = new Event(myTitle.getText().toString(), myDate.getText().toString(),
-                                        myTime.getText().toString(), myDesc.getText().toString());
+                                        myTime.getText().toString(), myDesc.getText().toString(), coordinates);
 
                 database.child("Event").push().setValue(event);
                 myTitle.setText("");

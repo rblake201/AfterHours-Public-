@@ -5,15 +5,17 @@ public class Event {
     public String date;
     public String time;
     public String description;
+    public String coordinates;
 
     public Event(){
     }
 
-    public Event(String title, String date, String time, String description){
+    public Event(String title, String date, String time, String description, String coordinates){
         this.title = title;
         this.date = date;
         this.time = time;
         this.description = description;
+        this.coordinates = coordinates;
     }
 
     public String getTitle() {
@@ -47,4 +49,8 @@ public class Event {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getCoordinates() { return coordinates; }
+
+    public void setCoordinates(String coordinates) { this.coordinates = coordinates; }
 }

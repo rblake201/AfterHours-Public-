@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.gson.Gson;
 
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
                 createGraphics(motionEvent, wgs84Point);
                 Intent startIntent = new Intent(getApplicationContext(), EventInfoActivity.class);
+                startIntent.putExtra("point", wgs84Point.toJson());
                 startActivity(startIntent);
 
                 return true;
