@@ -33,7 +33,8 @@ public class EventInfoActivity extends AppCompatActivity {
                 myTime = findViewById(R.id.time);
                 myDesc = findViewById(R.id.description);
 
-                Event event = new Event(myTitle.getText().toString(), myDate.getText().toString(), myTime.getText().toString(), myDesc.getText().toString());
+                Event event = new Event(myTitle.getText().toString(), myDate.getText().toString(),
+                                        myTime.getText().toString(), myDesc.getText().toString());
 
                 database.child("Event").push().setValue(event);
             }
