@@ -1,5 +1,7 @@
 package com.example.starterproject;
 
+import com.esri.arcgisruntime.geometry.Point;
+
 public class Event {
     public String title;
     public String date;
