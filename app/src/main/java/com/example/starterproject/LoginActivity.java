@@ -3,6 +3,7 @@ package com.example.starterproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,9 +21,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{// implements View.OnClickListener {
 
     private FirebaseAuth auth;
+    private Button login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +32,45 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-        signIn();
+        login = (Button) findViewById(R.id.btnLogin);
+        //login.setOnClickListener(this);
     }
 
-    private void signIn() {
+    public void signIn(View view) {
         EditText emailEdit = findViewById(R.id.etName);
         EditText passwordEdit = findViewById(R.id.etPassword);
 
         String email = emailEdit.getText().toString();
         String password = passwordEdit.getText().toString();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, (task) -> {
-            if(task.isSuccessful()) {
+            if (task.isSuccessful()) {
                 Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-            }else {
+            } else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
             }
+        });
+    }
+
+    public void createUser(View view) {
+        EditText emailEdit = findViewById(R.id.etName);
+        EditText passwordEdit = findViewById(R.id.etPassword);
+
+        String email = emailEdit.getText().toString();
+        String password = passwordEdit.getText().toString();
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, (task) -> {
+            {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 }
