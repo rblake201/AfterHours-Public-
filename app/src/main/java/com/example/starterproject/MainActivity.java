@@ -11,6 +11,9 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.esri.arcgisruntime.arcgisservices.LabelDefinition;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,20 +65,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 eventList.clear();
+                int i = 0;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     Event event = ds.getValue(Event.class);
                     eventList.add(event);
 
-                    Point mapPoint = new Gson().fromJson(ds.getValue(Event.class).coordinates, Point.class);
-                    //Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
-                    // add the point with a symbol to graphics overlay and add overlay to map view
+                    Geometry mPoint = new Geometry() {}.fromJson(eventList.get(i).coordinates);
+                    System.out.println(mPoint);
+
+                    TextSymbol eventTitleSymbol =
+                            new TextSymbol(
+                                    10, "   " + eventList.get(i).title + "\n"
+                                    + eventList.get(i).date + "\n"
+                                    + eventList.get(i).time + "\n"
+                                    + eventList.get(i).description,
+                                    Color.argb(255, 0, 0, 230),
+                                    TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.TOP);
+
                     graphicsOverlay = new GraphicsOverlay();
                     mMapView.getGraphicsOverlays().add(graphicsOverlay);
                     SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
                     pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
-                    Graphic pointGraphic = new Graphic(mapPoint, pointSymbol);
+                    Graphic pointGraphic = new Graphic(mPoint, pointSymbol);
+                    Graphic eventTitle = new Graphic(mPoint, eventTitleSymbol);
 
                     graphicsOverlay.getGraphics().add(pointGraphic);
+                    graphicsOverlay.getGraphics().add(eventTitle);
+                    i++;
                 }
 
 

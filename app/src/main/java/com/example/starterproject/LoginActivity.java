@@ -22,7 +22,6 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
     private FirebaseAuth auth;
 
     @Override
@@ -49,6 +48,4 @@ public class LoginActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
             }
-        });
-    }
 }
