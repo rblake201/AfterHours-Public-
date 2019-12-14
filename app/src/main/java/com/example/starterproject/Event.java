@@ -1,17 +1,18 @@
 package com.example.starterproject;
 
-import com.esri.arcgisruntime.geometry.Point;
 
 public class Event {
-    public String title;
-    public String date;
-    public String time;
-    public String description;
-    public String coordinates;
+    public String title;   // Stores the Title of the Event
+    public String date;    // Stores the Date of the Event
+    public String time;    // Stores the Time of the Event
+    public String description;   // Stores the Description of the Event
+    public String coordinates;   // Stores the Coordinates of the Event
 
+    // Default Constructor
     public Event(){
     }
 
+    // Non-Default Constructor
     public Event(String title, String date, String time, String description, String coordinates){
         this.title = title;
         this.date = date;
@@ -19,6 +20,8 @@ public class Event {
         this.description = description;
         this.coordinates = coordinates;
     }
+
+    //GETTERS AND SETTERS FOR THE CLASS
 
     public String getTitle() {
         return title;

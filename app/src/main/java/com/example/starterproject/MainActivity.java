@@ -54,25 +54,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create firebase object
         databaseReference = FirebaseDatabase.getInstance().getReference("Event");
         eventList = new ArrayList<>();
 
+        //Creates a MapView starting over Rexburg
         mMapView = findViewById(R.id.mapView);
         ArcGISMap map = new ArcGISMap(Basemap.Type.NATIONAL_GEOGRAPHIC, 43.8231, -111.7924, 16);
         mMapView.setMap(map);
 
+        //Checks firebase to see when data is changed
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 eventList.clear();
                 int i = 0;
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                for(DataSnapshot ds : dataSnapshot.getChildren()){  //loops through the data in firebase
                     Event event = ds.getValue(Event.class);
-                    eventList.add(event);
+                    eventList.add(event);  //adds firebase data to the eventList
 
-                    Geometry mPoint = new Geometry() {}.fromJson(eventList.get(i).coordinates);
+                    Geometry mPoint = new Geometry() {}.fromJson(eventList.get(i).coordinates); //changes json info in firebase to a point
                     System.out.println(mPoint);
 
+                    //displays event information to the map view
                     TextSymbol eventTitleSymbol =
                             new TextSymbol(
                                     10, "   " + eventList.get(i).title + "\n"
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                                     Color.argb(255, 0, 0, 230),
                                     TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.TOP);
 
+                    //creates and add graphics overlay
                     graphicsOverlay = new GraphicsOverlay();
                     mMapView.getGraphicsOverlays().add(graphicsOverlay);
                     SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
@@ -103,47 +108,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //listens for a touch to the screen and gets the location of the event
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView){
             public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
                 android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
 
                 Point mapPoint = mMapView.screenToLocation((screenPoint));
 
-                Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
-
-                //createGraphics(motionEvent, wgs84Point);
                 Intent startIntent = new Intent(getApplicationContext(), EventInfoActivity.class);
-                startIntent.putExtra("point", mapPoint.toJson());
+                startIntent.putExtra("point", mapPoint.toJson()); //passes the point information
                 startActivity(startIntent);
 
                 return true;
             }
-
-            /*private void createGraphics(MotionEvent motionEvent, Point wgs84Point) {
-                createGraphicsOverlay();
-                createPointGraphics(motionEvent, wgs84Point);
-            }
-
-
-            private void createGraphicsOverlay() {
-                if(!mMapView.getGraphicsOverlays().isEmpty()) {
-                    //mMapView.getGraphicsOverlays().clear();
-                }
-                else if(mMapView.getGraphicsOverlays().isEmpty()) {
-                    graphicsOverlay = new GraphicsOverlay();
-                    mMapView.getGraphicsOverlays().add(graphicsOverlay);
-                }
-            }
-
-            private void createPointGraphics(MotionEvent motionEvent, Point wgs84Point) {
-
-                SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.rgb(226, 119, 40), 10.0f);
-                pointSymbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f));
-                Graphic pointGraphic = new Graphic(wgs84Point, pointSymbol);
-
-                graphicsOverlay.getGraphics().add(pointGraphic);
-
-            }*/
 
         });
 

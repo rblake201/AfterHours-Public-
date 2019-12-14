@@ -31,45 +31,56 @@ public class LoginActivity extends AppCompatActivity{// implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Create a Firebase Authorization object for Sign-in and Registration
         auth = FirebaseAuth.getInstance();
-        login = (Button) findViewById(R.id.btnLogin);
-        //login.setOnClickListener(this);
+
     }
 
+    // The Sign-in functionality
     public void signIn(View view) {
+        // Get email from text field
         EditText emailEdit = findViewById(R.id.etName);
-        EditText passwordEdit = findViewById(R.id.etPassword);
-
         String email = emailEdit.getText().toString();
+
+        // Get password from text field
+        EditText passwordEdit = findViewById(R.id.etPassword);
         String password = passwordEdit.getText().toString();
+
+        // Talk to Firebase and authenticate login information
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, (task) -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                startActivity(intent); // Start the main activity, which brings us to the map
                 finish();
             } else {
-                Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
-            }
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show(); // Lets us know if
+            }   // the user doesn't exists or if they typed something in wrong.
         });
     }
 
+    // The User creation functionality
     public void createUser(View view) {
-        EditText emailEdit = findViewById(R.id.etName);
-        EditText passwordEdit = findViewById(R.id.etPassword);
 
+        // Get email from text field
+        EditText emailEdit = findViewById(R.id.etName);
         String email = emailEdit.getText().toString();
+
+        // Get password from text field
+        EditText passwordEdit = findViewById(R.id.etPassword);
         String password = passwordEdit.getText().toString();
+
+        // Start the user registration process with information from text fields
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, (task) -> {
             {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Successfully Registered", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    startActivity(intent); // Start the main activity, which brings us to the map if user creation
+                    finish();              // was successful
                 } else {
-                    Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show();
-                }
+                    Toast.makeText(this, "Registration Failed", Toast.LENGTH_LONG).show(); // Lets us know if
+                }   // the user doesn't exists or if they typed something in wrong.
             }
         });
     }
